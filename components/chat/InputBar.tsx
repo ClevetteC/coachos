@@ -4,22 +4,31 @@ import { useState, useRef, KeyboardEvent } from 'react'
 import { Button } from '@/components/ui/button'
 
 interface Props {
-  onSend: (text: string) => void
+  onSend: (text: string, file?: File) => void
   disabled: boolean
+  triggerUpload?: boolean
+  onUploadTriggered?: () => void
 }
 
-export function InputBar({ onSend, disabled }: Props) {
+export function InputBar({ onSend, disabled, triggerUpload, onUploadTriggered }: Props) {
   const [text, setText] = useState('')
+  const [file, setFile] = useState<File | null>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
+  // Allow parent (empty state cards) to trigger the file picker
+  if (triggerUpload) {
+    fileInputRef.current?.click()
+    onUploadTriggered?.()
+  }
 
   function handleSend() {
     const trimmed = text.trim()
-    if (!trimmed || disabled) return
-    onSend(trimmed)
+    if ((!trimmed && !file) || disabled) return
+    onSend(trimmed, file ?? undefined)
     setText('')
-    if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto'
-    }
+    setFile(null)
+    if (textareaRef.current) textareaRef.current.style.height = 'auto'
   }
 
   function handleKeyDown(e: KeyboardEvent<HTMLTextAreaElement>) {
@@ -36,29 +45,82 @@ export function InputBar({ onSend, disabled }: Props) {
     el.style.height = `${Math.min(el.scrollHeight, 200)}px`
   }
 
+  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const selected = e.target.files?.[0]
+    if (selected) setFile(selected)
+    e.target.value = ''
+  }
+
   return (
-    <div className="border-t p-4">
-      <div className="max-w-2xl mx-auto flex gap-3 items-end">
+    <div className="border-t bg-background px-4 pb-4 pt-3">
+      {file && (
+        <div className="max-w-2xl mx-auto mb-2">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[var(--amber)]/10 border border-[var(--amber)]/30 text-xs text-foreground">
+            <svg width="12" height="12" viewBox="0 0 15 15" fill="none">
+              <path d="M3.5 2A1.5 1.5 0 0 0 2 3.5v8A1.5 1.5 0 0 0 3.5 13h8a1.5 1.5 0 0 0 1.5-1.5v-8A1.5 1.5 0 0 0 11.5 2h-8Zm0 1h8a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-8a.5.5 0 0 1 .5-.5Z" fill="currentColor"/>
+            </svg>
+            <span className="truncate max-w-[200px]">{file.name}</span>
+            <button
+              onClick={() => setFile(null)}
+              className="ml-1 opacity-60 hover:opacity-100 transition-opacity"
+            >
+              <svg width="10" height="10" viewBox="0 0 15 15" fill="none">
+                <path d="M11.782 4.032a.575.575 0 1 0-.813-.814L7.5 6.687 4.031 3.218a.575.575 0 0 0-.814.814L6.687 7.5l-3.47 3.468a.575.575 0 0 0 .814.814L7.5 8.313l3.469 3.469a.575.575 0 0 0 .813-.814L8.313 7.5l3.469-3.468Z" fill="currentColor"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      )}
+
+      <div className="max-w-2xl mx-auto flex gap-2 items-end">
+        {/* File upload button */}
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept=".txt,.pdf,.md,.csv,.docx"
+          className="hidden"
+          onChange={handleFileChange}
+        />
+        <button
+          type="button"
+          onClick={() => fileInputRef.current?.click()}
+          disabled={disabled}
+          title="Attach a document"
+          className="h-11 w-11 rounded-xl border flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-foreground/30 transition-colors disabled:opacity-40 shrink-0"
+        >
+          <svg width="16" height="16" viewBox="0 0 15 15" fill="none">
+            <path d="M3.5 2A1.5 1.5 0 0 0 2 3.5v8A1.5 1.5 0 0 0 3.5 13h8a1.5 1.5 0 0 0 1.5-1.5v-8A1.5 1.5 0 0 0 11.5 2h-8Zm4 3a.5.5 0 0 0-1 0V7H5a.5.5 0 0 0 0 1h1.5v1.5a.5.5 0 0 0 1 0V8H9a.5.5 0 0 0 0-1H7.5V5Z" fill="currentColor"/>
+          </svg>
+        </button>
+
         <textarea
           ref={textareaRef}
           value={text}
           onChange={(e) => setText(e.target.value)}
           onKeyDown={handleKeyDown}
           onInput={handleInput}
-          placeholder="Message CoachOS..."
+          placeholder={file ? 'Add a note, or send as-is...' : 'Message CoachOS...'}
           disabled={disabled}
           rows={1}
-          className="flex-1 resize-none rounded-xl border bg-background px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring min-h-[48px] max-h-[200px] disabled:opacity-50"
+          className="flex-1 resize-none rounded-xl border bg-background px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring min-h-[44px] max-h-[200px] disabled:opacity-50 leading-relaxed"
         />
+
         <Button
           onClick={handleSend}
-          disabled={disabled || !text.trim()}
+          disabled={disabled || (!text.trim() && !file)}
           size="sm"
-          className="rounded-xl h-12 px-4"
+          className="rounded-xl h-11 px-4 shrink-0"
         >
-          Send
+          {disabled ? (
+            <svg width="14" height="14" viewBox="0 0 15 15" fill="none" className="animate-spin">
+              <path d="M7.5 1.5a6 6 0 1 0 6 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+            </svg>
+          ) : 'Send'}
         </Button>
       </div>
+      <p className="max-w-2xl mx-auto mt-2 text-[10px] text-muted-foreground/60">
+        Supports PDF, TXT, MD. Shift+Enter for new line.
+      </p>
     </div>
   )
 }

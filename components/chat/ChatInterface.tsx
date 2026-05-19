@@ -20,12 +20,36 @@ export function ChatInterface({ conversationId, initialMessages }: Props) {
   const [messages, setMessages] = useState<Message[]>(initialMessages)
   const [streaming, setStreaming] = useState(false)
   const [currentId, setCurrentId] = useState<string | null>(conversationId)
+  const [triggerUpload, setTriggerUpload] = useState(false)
   const abortRef = useRef<AbortController | null>(null)
 
-  const sendMessage = useCallback(async (text: string) => {
-    if (!text.trim() || streaming) return
+  async function extractFileText(file: File): Promise<string> {
+    const formData = new FormData()
+    formData.append('file', file)
+    const res = await fetch('/api/upload', { method: 'POST', body: formData })
+    if (!res.ok) throw new Error('File upload failed')
+    const { text } = await res.json()
+    return text
+  }
 
-    const userMessage: Message = { role: 'user', content: text }
+  const sendMessage = useCallback(async (text: string, file?: File) => {
+    if ((!text.trim() && !file) || streaming) return
+
+    let userContent = text.trim()
+
+    if (file) {
+      try {
+        const extracted = await extractFileText(file)
+        const prefix = text.trim()
+          ? `${text.trim()}\n\n`
+          : ''
+        userContent = `${prefix}[Uploaded: ${file.name}]\n\n${extracted}\n\nPlease extract any relevant information about my coaching business from this document and save it using the appropriate foundation data tools.`
+      } catch {
+        userContent = text.trim() || `I tried to upload ${file.name} but the extraction failed. Please let me know what formats you support.`
+      }
+    }
+
+    const userMessage: Message = { role: 'user', content: userContent }
     const nextMessages = [...messages, userMessage]
     setMessages(nextMessages)
     setStreaming(true)
@@ -36,16 +60,11 @@ export function ChatInterface({ conversationId, initialMessages }: Props) {
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          messages: nextMessages,
-          conversationId: currentId,
-        }),
+        body: JSON.stringify({ messages: nextMessages, conversationId: currentId }),
         signal: abortRef.current.signal,
       })
 
-      if (!response.ok || !response.body) {
-        throw new Error('Request failed')
-      }
+      if (!response.ok || !response.body) throw new Error('Request failed')
 
       const reader = response.body.getReader()
       const decoder = new TextDecoder()
@@ -66,7 +85,6 @@ export function ChatInterface({ conversationId, initialMessages }: Props) {
           if (line.startsWith('data: ')) {
             try {
               const parsed = JSON.parse(line.slice(6))
-
               if (parsed.text !== undefined) {
                 assistantText += parsed.text
                 setMessages((prev) => {
@@ -75,12 +93,11 @@ export function ChatInterface({ conversationId, initialMessages }: Props) {
                   return updated
                 })
               } else if (parsed.id) {
-                // conversation_id event
                 setCurrentId(parsed.id)
                 router.replace(`/chat/${parsed.id}`, { scroll: false })
               }
             } catch {
-              // partial JSON line, skip
+              // partial line
             }
           }
         }
@@ -104,8 +121,18 @@ export function ChatInterface({ conversationId, initialMessages }: Props) {
 
   return (
     <div className="flex flex-col h-full">
-      <MessageList messages={messages} streaming={streaming} />
-      <InputBar onSend={sendMessage} disabled={streaming} />
+      <MessageList
+        messages={messages}
+        streaming={streaming}
+        onUpload={() => setTriggerUpload(true)}
+        onStartInterview={() => sendMessage('Get me set up')}
+      />
+      <InputBar
+        onSend={sendMessage}
+        disabled={streaming}
+        triggerUpload={triggerUpload}
+        onUploadTriggered={() => setTriggerUpload(false)}
+      />
     </div>
   )
 }
