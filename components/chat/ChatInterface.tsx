@@ -126,6 +126,7 @@ export function ChatInterface({ conversationId, initialMessages }: Props) {
         streaming={streaming}
         onUpload={() => setTriggerUpload(true)}
         onStartInterview={() => sendMessage('Get me set up')}
+        onOptionClick={(option) => sendMessage(option)}
       />
       <InputBar
         onSend={sendMessage}
