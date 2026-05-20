@@ -78,10 +78,10 @@
   --sidebar-border: oklch(0.19 0.005 75);
   --sidebar-ring: oklch(0.40 0 0);
   /* copper/gold brand accent — richer than amber */
-  --amber: oklch(0.72 0.12 68);
+  --amber: oklch(0.79 0.18 68);
   --amber-foreground: oklch(0.11 0.005 75);
-  --amber-muted: oklch(0.72 0.12 68 / 12%);
-  --amber-border: oklch(0.72 0.12 68 / 25%);
+  --amber-muted: oklch(0.79 0.18 68 / 12%);
+  --amber-border: oklch(0.79 0.18 68 / 30%);
 }
 
 .dark {
@@ -129,3 +129,31 @@
     @apply font-sans;
   }
 }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes slideLeft {
+  from { opacity: 0; transform: translateX(-20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes amberGlow {
+  0%, 100% { box-shadow: 0 0 0 0 oklch(0.79 0.18 68 / 0%); }
+  50%       { box-shadow: 0 0 18px 2px oklch(0.79 0.18 68 / 25%); }
+}
+
+.animate-fade-up   { animation: fadeUp   0.7s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.animate-fade-in   { animation: fadeIn   0.6s ease both; }
+.animate-slide-left { animation: slideLeft 0.65s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.animate-amber-glow { animation: amberGlow 2.8s ease-in-out infinite; }
+
+.delay-1 { animation-delay: 0.08s; }
+.delay-2 { animation-delay: 0.16s; }
+.delay-3 { animation-delay: 0.26s; }
+.delay-4 { animation-delay: 0.38s; }
+.delay-5 { animation-delay: 0.52s; }

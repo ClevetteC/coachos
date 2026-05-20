@@ -67,6 +67,28 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
+  // Rate limit: 30 user messages per hour per account
+  const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString()
+  const { data: userConvs } = await supabase
+    .from('conversations')
+    .select('id')
+    .eq('user_id', user.id)
+  const convIds = (userConvs ?? []).map((c: { id: string }) => c.id)
+  if (convIds.length > 0) {
+    const { count } = await supabase
+      .from('messages')
+      .select('id', { count: 'exact', head: true })
+      .eq('role', 'user')
+      .gte('created_at', oneHourAgo)
+      .in('conversation_id', convIds)
+    if ((count ?? 0) >= 30) {
+      return NextResponse.json(
+        { error: 'Rate limit reached. You can send up to 30 messages per hour.' },
+        { status: 429 }
+      )
+    }
+  }
+
   const body = await request.json()
   const { messages, conversationId } = body as {
     messages: MessageParam[]

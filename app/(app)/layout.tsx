@@ -19,16 +19,13 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
   return (
     <div className="flex h-screen bg-background">
-      <aside className="w-64 border-r flex flex-col">
-        <div className="p-4 border-b">
-          <span className="font-bold text-sm">CoachOS</span>
-        </div>
+      <aside className="w-64 border-r flex flex-col min-h-0">
         <ConversationList
           conversations={conversations ?? []}
           userEmail={user.email ?? ''}
         />
       </aside>
-      <main className="flex-1 flex flex-col overflow-hidden">
+      <main className="flex-1 flex flex-col min-h-0 overflow-hidden">
         {children}
       </main>
     </div>

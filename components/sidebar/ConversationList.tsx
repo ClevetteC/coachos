@@ -3,7 +3,6 @@
 import { usePathname, useRouter } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import { createClient } from '@/lib/supabase/client'
-import { ScrollArea } from '@/components/ui/scroll-area'
 
 interface Conversation {
   id: string
@@ -37,14 +36,14 @@ export function ConversationList({ conversations, userEmail }: Props) {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div
-              className="w-5 h-5 rounded-full flex items-center justify-center"
+              className="w-6 h-6 rounded-full flex items-center justify-center shrink-0"
               style={{ background: 'var(--amber)' }}
             >
-              <span className="text-[9px] font-bold" style={{ color: 'var(--amber-foreground)' }}>C</span>
+              <span className="text-[10px] font-black" style={{ color: 'var(--amber-foreground)' }}>C</span>
             </div>
             <div>
-              <p className="text-xs font-semibold tracking-wide" style={{ color: 'var(--sidebar-accent-foreground)' }}>CoachOS</p>
-              <p className="text-[9px] tracking-[0.12em] uppercase opacity-40" style={{ color: 'var(--sidebar-foreground)' }}>CCC</p>
+              <p className="text-sm font-black tracking-tight" style={{ color: 'var(--sidebar-accent-foreground)' }}>CoachOS</p>
+              <p className="text-[9px] tracking-[0.14em] uppercase opacity-40" style={{ color: 'var(--sidebar-foreground)' }}>CCC</p>
             </div>
           </div>
           <button
@@ -70,7 +69,7 @@ export function ConversationList({ conversations, userEmail }: Props) {
       </div>
 
       {/* Conversations */}
-      <ScrollArea className="flex-1">
+      <div className="flex-1 overflow-y-auto min-h-0">
         <div className="px-3 pb-2 space-y-0.5">
           {conversations.length === 0 && (
             <p className="px-2 py-2 text-[11px] opacity-30" style={{ color: 'var(--sidebar-foreground)' }}>
@@ -98,7 +97,7 @@ export function ConversationList({ conversations, userEmail }: Props) {
             )
           })}
         </div>
-      </ScrollArea>
+      </div>
 
       {/* User */}
       <div className="px-4 py-4 border-t" style={{ borderColor: 'var(--sidebar-border)' }}>
