@@ -1,9 +1,10 @@
 'use client'
 
-import { useState, useRef, useCallback } from 'react'
+import { useState, useRef, useCallback, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { MessageList } from './MessageList'
 import { InputBar } from './InputBar'
+import { OnboardingWalkthrough } from '@/components/onboarding/OnboardingWalkthrough'
 
 interface Message {
   role: 'user' | 'assistant'
@@ -21,7 +22,16 @@ export function ChatInterface({ conversationId, initialMessages }: Props) {
   const [streaming, setStreaming] = useState(false)
   const [currentId, setCurrentId] = useState<string | null>(conversationId)
   const [triggerUpload, setTriggerUpload] = useState(false)
+  const [showOnboarding, setShowOnboarding] = useState(false)
   const abortRef = useRef<AbortController | null>(null)
+
+  useEffect(() => {
+    try {
+      if (!localStorage.getItem('coachos_onboarding_seen')) {
+        setShowOnboarding(true)
+      }
+    } catch {}
+  }, [])
 
   async function extractFileText(file: File): Promise<string> {
     const formData = new FormData()
@@ -95,6 +105,15 @@ export function ChatInterface({ conversationId, initialMessages }: Props) {
               } else if (parsed.id) {
                 setCurrentId(parsed.id)
                 router.replace(`/chat/${parsed.id}`, { scroll: false })
+              } else if (parsed.message) {
+                setMessages((prev) => {
+                  const updated = [...prev]
+                  updated[updated.length - 1] = {
+                    role: 'assistant',
+                    content: `Something went wrong: ${parsed.message}`,
+                  }
+                  return updated
+                })
               }
             } catch {
               // partial line
@@ -121,6 +140,9 @@ export function ChatInterface({ conversationId, initialMessages }: Props) {
 
   return (
     <div className="flex flex-col h-full">
+      {showOnboarding && (
+        <OnboardingWalkthrough onComplete={() => setShowOnboarding(false)} />
+      )}
       <MessageList
         messages={messages}
         streaming={streaming}

@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Button } from '@/components/ui/button'
+import { buttonVariants } from '@/components/ui/button'
 
 export default function NotFound() {
   return (
@@ -19,9 +19,9 @@ export default function NotFound() {
             This page does not exist or you do not have access to it.
           </p>
         </div>
-        <Button asChild className="h-10 px-6 font-semibold">
-          <Link href="/chat">Back to chat</Link>
-        </Button>
+        <Link href="/chat" className={buttonVariants({ className: 'h-10 px-6 font-semibold' })}>
+          Back to chat
+        </Link>
       </div>
     </div>
   )

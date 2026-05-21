@@ -1,5 +1,5 @@
 import { createClient } from './supabase/server'
-import { ONBOARDING_SKILL, NAVIGATOR_SKILL, VOICE_CHECK_SKILL } from './skill-content'
+import { getSkillContent } from './skill-content'
 import type { FoundationDataType } from './supabase/types'
 
 const CLAUDE_MD = `
@@ -87,20 +87,6 @@ Scale adds: ad-campaign-builder, session-prep, progress-tracker, expansion-detec
 Vague opener ("help", "menu", "options") → navigator skill
 `
 
-const SKILL_CONTENT = `
-## Skills loaded for this session
-
-${ONBOARDING_SKILL}
-
----
-
-${NAVIGATOR_SKILL}
-
----
-
-${VOICE_CHECK_SKILL}
-`
-
 type FoundationRow = {
   type: FoundationDataType
   data: Record<string, unknown>
@@ -124,6 +110,8 @@ export async function buildSystemPrompt(userId: string): Promise<string> {
   const foundationRows: FoundationRow[] = (foundationResult.data as FoundationRow[]) ?? []
   const setupStatus = statusResult.data
 
+  const tier: string = (setupStatus as Record<string, unknown> | null)?.tier as string ?? 'starter'
+
   const foundationBlocks = foundationRows
     .map((row) => {
       const label = row.type.replace(/_/g, '-')
@@ -135,6 +123,8 @@ export async function buildSystemPrompt(userId: string): Promise<string> {
     ? `## setup-status\n\`\`\`json\n${JSON.stringify(setupStatus, null, 2)}\n\`\`\``
     : `## setup-status\n\`\`\`json\n{"onboarding_complete": false, "percentage_complete": 0, "tier": "starter"}\n\`\`\``
 
+  const skillContent = `## Skills loaded for this session\n\n${getSkillContent(tier)}`
+
   return [
     CLAUDE_MD,
     '---',
@@ -142,6 +132,6 @@ export async function buildSystemPrompt(userId: string): Promise<string> {
     setupBlock,
     foundationBlocks || '(No foundation files written yet. Onboarding has not run.)',
     '---',
-    SKILL_CONTENT,
+    skillContent,
   ].join('\n\n')
 }
