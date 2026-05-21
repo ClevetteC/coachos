@@ -1,8 +1,9 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRef, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import { formatAuthError } from '@/lib/auth-messages'
+import { signUpResultFromResponse } from '@/lib/auth-signup'
 import { Input } from '@/components/ui/input'
 
 const GRAIN = "url(\"data:image/svg+xml,%3Csvg width='300' height='300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")"
@@ -65,28 +66,39 @@ function WorkflowGraphic() {
 }
 
 export default function SignupPage() {
-  const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [emailSent, setEmailSent] = useState(false)
+  const submittingRef = useRef(false)
 
   async function handleSignup(e: React.FormEvent) {
     e.preventDefault()
+    if (submittingRef.current || loading) return
+    submittingRef.current = true
     setLoading(true)
     setError('')
 
     const supabase = createClient()
-    const { error: signUpError } = await supabase.auth.signUp({ email, password })
+    const { data, error: signUpError } = await supabase.auth.signUp({
+      email: email.trim(),
+      password,
+      options: {
+        emailRedirectTo: `${window.location.origin}/auth/callback`,
+      },
+    })
 
-    if (signUpError) {
-      setError(signUpError.message)
-      setLoading(false)
+    const result = signUpResultFromResponse(email.trim(), signUpError, data.user ?? null)
+    submittingRef.current = false
+    setLoading(false)
+
+    if (!result.ok) {
+      setError(formatAuthError(result.message))
       return
     }
 
-    router.push('/chat')
-    router.refresh()
+    setEmailSent(true)
   }
 
   return (
@@ -152,6 +164,26 @@ export default function SignupPage() {
       <div className="flex-1 flex items-center justify-center px-10" style={{ background: 'var(--ccc-cream)' }}>
         <div className="w-full max-w-sm">
 
+          {emailSent ? (
+            <div className="animate-fade-up text-center">
+              <h1 style={{
+                fontFamily: 'var(--font-display)', fontStyle: 'italic', fontWeight: 600,
+                fontSize: 'clamp(2.4rem, 5vw, 3.6rem)', lineHeight: '0.92', letterSpacing: '-0.01em',
+                color: 'var(--ccc-near-black)',
+              }}>
+                Check your email.
+              </h1>
+              <p className="text-sm mt-5" style={{ color: 'var(--muted-foreground)', fontFamily: 'var(--font-body)' }}>
+                If this email is eligible for CoachOS, a confirmation link is on its way to <strong>{email}</strong>.
+                Click it to activate your account. Check spam if you do not see it within a few minutes.
+              </p>
+              <p className="text-sm mt-3" style={{ color: 'var(--muted-foreground)', fontFamily: 'var(--font-body)' }}>
+                Already confirmed?{' '}
+                <a href="/login" className="font-semibold underline underline-offset-4" style={{ color: 'var(--ccc-raspberry)' }}>Sign in</a>
+              </p>
+            </div>
+          ) : (
+          <>
           <div className="mb-10 animate-fade-up">
             <h1 style={{
               fontFamily: 'var(--font-display)', fontStyle: 'italic', fontWeight: 600,
@@ -166,11 +198,11 @@ export default function SignupPage() {
           </div>
 
           <form onSubmit={handleSignup} className="space-y-3 animate-fade-up delay-2">
-            <Input type="email" placeholder="Email address" value={email}
-              onChange={(e) => setEmail(e.target.value)} required autoFocus
+            <Input type="email" name="email" autoComplete="email" placeholder="Email address" value={email}
+              onChange={(e) => setEmail(e.target.value)} required autoFocus disabled={loading}
               className="h-12 text-sm" style={{ fontFamily: 'var(--font-body)' }} />
-            <Input type="password" placeholder="Password (8+ characters)" value={password}
-              onChange={(e) => setPassword(e.target.value)} required minLength={8}
+            <Input type="password" name="password" autoComplete="new-password" placeholder="Password (8+ characters)" value={password}
+              onChange={(e) => setPassword(e.target.value)} required minLength={8} disabled={loading}
               className="h-12 text-sm" style={{ fontFamily: 'var(--font-body)' }} />
             {error && (
               <p className="text-sm font-medium" style={{ color: 'var(--destructive)', fontFamily: 'var(--font-body)' }}>{error}</p>
@@ -201,6 +233,8 @@ export default function SignupPage() {
               AI operating system for coaches and consultants
             </p>
           </div>
+          </>
+          )}
         </div>
       </div>
     </div>

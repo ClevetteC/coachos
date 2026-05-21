@@ -27,6 +27,15 @@ export async function proxy(request: NextRequest) {
 
   const isAuthRoute = request.nextUrl.pathname.startsWith('/login') ||
     request.nextUrl.pathname.startsWith('/signup')
+  const isAuthCallback = request.nextUrl.pathname.startsWith('/auth/callback')
+
+  // Email confirmation required: block app until the user confirms via the link
+  if (user && !user.email_confirmed_at && !isAuthRoute && !isAuthCallback) {
+    const url = request.nextUrl.clone()
+    url.pathname = '/login'
+    url.searchParams.set('error', 'email_not_confirmed')
+    return NextResponse.redirect(url)
+  }
 
   if (!user && !isAuthRoute) {
     const url = request.nextUrl.clone()
@@ -34,7 +43,7 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(url)
   }
 
-  if (user && isAuthRoute) {
+  if (user && user.email_confirmed_at && isAuthRoute) {
     const url = request.nextUrl.clone()
     url.pathname = '/chat'
     return NextResponse.redirect(url)

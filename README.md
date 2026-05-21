@@ -1,36 +1,34 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# CoachOS Web
 
-## Getting Started
+Next.js app for CoachOS (CCC): authenticated chat, per-user foundation data, and Supabase-backed storage.
 
-First, run the development server:
+## Environment
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+Create `.env.local`:
+
+```
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+ANTHROPIC_API_KEY=
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Auth email (required before beta / production signups)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Signup uses Supabase email confirmation. **You must configure custom SMTP** or testers will hit `email rate limit exceeded` (built-in mail allows only 2 emails/hour per project).
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Step-by-step: **[docs/SUPABASE_AUTH_EMAIL.md](docs/SUPABASE_AUTH_EMAIL.md)** (Resend + Supabase dashboard).
 
-## Learn More
+Beta user management: **Supabase Dashboard → Authentication → Users**. Delete users you do not approve; unconfirmed users cannot access the app until they click the email link.
 
-To learn more about Next.js, take a look at the following resources:
+## Development
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm install
+npm run dev
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Open [http://localhost:3000](http://localhost:3000).
 
-## Deploy on Vercel
+## Deploy
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Hosted on Vercel. After deploy, add the production URL to Supabase **Authentication → URL Configuration** (see auth email doc).
