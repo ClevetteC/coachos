@@ -16,7 +16,7 @@ const STEPS: Step[] = [
   {
     counter: '01',
     title: 'Welcome to CoachOS',
-    body: 'Your AI operating system for sales, coaching, and consulting. Built for coaches and consultants who want to close more, deliver better, and build faster.',
+    body: 'Most coaches end up with a folder of AI prompts they ran once and forgot. CoachOS is different. It runs on your voice, your ideal client, and your offers. Every output, from LinkedIn sequences to full proposals, is checked for voice and conversion quality before it reaches you. Nothing to fix. Ready to send.',
     features: null,
   },
   {

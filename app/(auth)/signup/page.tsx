@@ -192,8 +192,8 @@ export default function SignupPage() {
             }}>
               Create account.
             </h1>
-            <p className="text-sm mt-4" style={{ color: 'var(--muted-foreground)', fontFamily: 'var(--font-body)' }}>
-              Get started with CoachOS.
+            <p className="text-sm mt-4 leading-relaxed" style={{ color: 'var(--muted-foreground)', fontFamily: 'var(--font-body)' }}>
+              Not a prompt library. A complete operating system that reads your voice, your ideal client, and your offers, then runs your full sales and content workflows end to end.
             </p>
           </div>
 

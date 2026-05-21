@@ -63,14 +63,66 @@ export function MessageList({ messages, streaming, onUpload, onStartInterview, o
 
           <p
             className="text-base leading-relaxed max-w-md animate-fade-up delay-2"
-            style={{ color: 'var(--muted-foreground)', fontFamily: 'var(--font-body)', marginBottom: '2.5rem' }}
+            style={{ color: 'var(--muted-foreground)', fontFamily: 'var(--font-body)', marginBottom: '2rem' }}
           >
-            Your AI operating system for sales, coaching, and consulting.
-            Build your foundation once. Run every workflow from here.
+            Build your foundation once. CoachOS reads your voice, your ideal client, and your offers, then runs your full sales and content workflow from there. Every output is quality-checked before it reaches you.
           </p>
 
+          {/* Capabilities overview */}
+          <div className="mb-8 animate-fade-up delay-3">
+            <div className="flex items-center gap-3 mb-5">
+              <div className="h-px flex-1" style={{ background: 'var(--border)' }} />
+              <p
+                className="text-[9px] tracking-[0.22em] uppercase font-semibold"
+                style={{ color: 'var(--muted-foreground)', opacity: 0.45, fontFamily: 'var(--font-body)' }}
+              >
+                What CoachOS does
+              </p>
+              <div className="h-px flex-1" style={{ background: 'var(--border)' }} />
+            </div>
+            <div className="grid grid-cols-3 gap-6">
+              {[
+                {
+                  label: 'Close clients',
+                  labelColor: 'var(--ccc-raspberry)',
+                  items: ['Prospect research', 'Industry SWOT', 'LinkedIn sequences', 'Discovery prep', 'Proposals and contracts', 'Follow-up engine'],
+                },
+                {
+                  label: 'Marketing and content',
+                  labelColor: 'var(--ccc-tiffany)',
+                  items: ['Landing pages', 'Email campaigns', 'Workshop scripts', 'Ad copy', 'Social content', 'Content calendar'],
+                },
+                {
+                  label: 'Operations',
+                  labelColor: 'rgba(28,28,28,0.45)',
+                  items: ['Monday brief', 'Revenue health', 'Pipeline review', 'Client health', 'Quarterly review', 'Invoice follow-up'],
+                },
+              ].map((group) => (
+                <div key={group.label}>
+                  <p
+                    className="text-[9px] tracking-[0.22em] uppercase font-semibold mb-3"
+                    style={{ color: group.labelColor, fontFamily: 'var(--font-body)' }}
+                  >
+                    {group.label}
+                  </p>
+                  <ul className="space-y-1.5">
+                    {group.items.map((item) => (
+                      <li
+                        key={item}
+                        className="text-xs leading-snug"
+                        style={{ color: 'var(--muted-foreground)', fontFamily: 'var(--font-body)' }}
+                      >
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </div>
+
           {/* Two paths */}
-          <div className="grid grid-cols-2 gap-4 mb-7 animate-fade-up delay-3">
+          <div className="grid grid-cols-2 gap-4 mb-7 animate-fade-up delay-4">
             {[
               {
                 tag: 'Option 01',
@@ -139,7 +191,7 @@ export function MessageList({ messages, streaming, onUpload, onStartInterview, o
           </div>
 
           {/* Divider */}
-          <div className="flex items-center gap-4 mb-5 animate-fade-up delay-4">
+          <div className="flex items-center gap-4 mb-5 animate-fade-up delay-5">
             <div className="flex-1 h-px" style={{ background: 'var(--border)' }} />
             <p
               className="text-[10px] tracking-[0.18em] uppercase"
