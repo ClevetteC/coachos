@@ -21,7 +21,7 @@ const monoFont = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://coachos.vercel.app'),
+  metadataBase: new URL('https://coach-os-web-pink.vercel.app'),
   title: "CoachOS",
   description: "Your AI operating system for sales, coaching, and consulting. Build your foundation once. Run every workflow from here.",
   openGraph: {
