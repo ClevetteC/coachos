@@ -21,8 +21,20 @@ const monoFont = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://coachos.vercel.app'),
   title: "CoachOS",
-  description: "Your AI operating system for coaches and consultants.",
+  description: "Your AI operating system for sales, coaching, and consulting. Build your foundation once. Run every workflow from here.",
+  openGraph: {
+    title: "CoachOS",
+    description: "Your AI operating system for sales, coaching, and consulting.",
+    siteName: "CoachOS",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "CoachOS",
+    description: "Your AI operating system for sales, coaching, and consulting.",
+  },
 };
 
 export default function RootLayout({
