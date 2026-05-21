@@ -51,18 +51,23 @@ export function InputBar({ onSend, disabled, triggerUpload, onUploadTriggered }:
 
   return (
     <div
-      className="border-t px-6 pb-5 pt-4"
-      style={{ background: 'var(--ccc-cream)', borderColor: 'var(--border)' }}
+      className="border-t px-6 pb-6 pt-4"
+      style={{
+        background: 'var(--ccc-cream)',
+        borderColor: 'var(--border)',
+        boxShadow: '0 -1px 0 rgba(28,28,28,0.04)',
+      }}
     >
       {file && (
-        <div className="max-w-2xl mx-auto mb-2">
+        <div className="max-w-2xl mx-auto mb-3">
           <div
-            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs"
+            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg"
             style={{
               background: 'var(--ccc-raspberry-muted)',
               border: '1px solid var(--ccc-raspberry-border)',
               color: 'var(--ccc-near-black)',
               fontFamily: 'var(--font-body)',
+              fontSize: '12.5px',
             }}
           >
             <svg width="12" height="12" viewBox="0 0 15 15" fill="none">
@@ -81,7 +86,7 @@ export function InputBar({ onSend, disabled, triggerUpload, onUploadTriggered }:
         </div>
       )}
 
-      <div className="max-w-2xl mx-auto flex gap-2 items-end">
+      <div className="max-w-2xl mx-auto flex gap-2.5 items-end">
         <input
           ref={fileInputRef}
           type="file"
@@ -96,18 +101,21 @@ export function InputBar({ onSend, disabled, triggerUpload, onUploadTriggered }:
           onClick={() => fileInputRef.current?.click()}
           disabled={disabled}
           title="Attach a document"
-          className="h-11 w-11 rounded-xl border flex items-center justify-center transition-all duration-200 disabled:opacity-40 shrink-0"
+          className="h-12 w-12 rounded-xl border flex items-center justify-center transition-all duration-200 disabled:opacity-40 shrink-0"
           style={{
             borderColor: 'var(--border)',
             color: 'var(--muted-foreground)',
+            background: 'rgba(254,252,243,0.85)',
           }}
           onMouseEnter={e => {
             e.currentTarget.style.borderColor = 'var(--ccc-tiffany)'
             e.currentTarget.style.color = 'var(--ccc-tiffany)'
+            e.currentTarget.style.background = 'var(--ccc-tiffany-muted)'
           }}
           onMouseLeave={e => {
             e.currentTarget.style.borderColor = 'var(--border)'
             e.currentTarget.style.color = 'var(--muted-foreground)'
+            e.currentTarget.style.background = 'rgba(254,252,243,0.85)'
           }}
         >
           <svg width="16" height="16" viewBox="0 0 15 15" fill="none">
@@ -124,9 +132,10 @@ export function InputBar({ onSend, disabled, triggerUpload, onUploadTriggered }:
           placeholder={file ? 'Add a note, or send as-is...' : 'Message CoachOS...'}
           disabled={disabled}
           rows={1}
-          className="flex-1 resize-none rounded-xl border px-4 py-3 text-sm focus:outline-none min-h-[44px] max-h-[200px] disabled:opacity-50 leading-relaxed transition-all duration-200"
+          className="flex-1 resize-none rounded-xl border px-4 py-3.5 focus:outline-none min-h-[48px] max-h-[200px] disabled:opacity-50 leading-relaxed transition-all duration-200"
           style={{
             fontFamily: 'var(--font-body)',
+            fontSize: '15px',
             background: 'rgba(254,252,243,0.85)',
             borderColor: 'var(--border)',
             color: 'var(--ccc-near-black)',
@@ -145,25 +154,26 @@ export function InputBar({ onSend, disabled, triggerUpload, onUploadTriggered }:
         <button
           onClick={handleSend}
           disabled={disabled || (!text.trim() && !file)}
-          className="h-11 px-5 rounded-xl text-sm font-semibold text-white transition-all duration-200 hover:scale-[1.03] active:scale-[0.97] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 shrink-0"
+          className="h-12 px-6 rounded-xl font-semibold text-white transition-all duration-200 hover:scale-[1.03] active:scale-[0.97] disabled:opacity-45 disabled:cursor-not-allowed disabled:hover:scale-100 shrink-0"
           style={{
             fontFamily: 'var(--font-body)',
+            fontSize: '14px',
             background: 'var(--ccc-raspberry)',
-            boxShadow: '0 2px 16px rgba(217,36,106,0.22)',
+            boxShadow: '0 2px 18px rgba(217,36,106,0.25)',
           }}
           onMouseEnter={e => {
             if (!e.currentTarget.disabled) {
               e.currentTarget.style.background = 'var(--ccc-raspberry-dark)'
-              e.currentTarget.style.boxShadow = '0 4px 20px rgba(217,36,106,0.32)'
+              e.currentTarget.style.boxShadow = '0 4px 24px rgba(217,36,106,0.35)'
             }
           }}
           onMouseLeave={e => {
             e.currentTarget.style.background = 'var(--ccc-raspberry)'
-            e.currentTarget.style.boxShadow = '0 2px 16px rgba(217,36,106,0.22)'
+            e.currentTarget.style.boxShadow = '0 2px 18px rgba(217,36,106,0.25)'
           }}
         >
           {disabled ? (
-            <svg width="14" height="14" viewBox="0 0 15 15" fill="none" className="animate-spin">
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none" className="animate-spin">
               <path d="M7.5 1.5a6 6 0 1 0 6 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
             </svg>
           ) : 'Send'}
@@ -171,8 +181,8 @@ export function InputBar({ onSend, disabled, triggerUpload, onUploadTriggered }:
       </div>
 
       <p
-        className="max-w-2xl mx-auto mt-2.5 text-[10px] tracking-wide"
-        style={{ color: 'var(--muted-foreground)', opacity: 0.40, fontFamily: 'var(--font-body)' }}
+        className="max-w-2xl mx-auto mt-3 tracking-wide"
+        style={{ color: 'var(--muted-foreground)', opacity: 0.38, fontFamily: 'var(--font-body)', fontSize: '11px' }}
       >
         Supports PDF, TXT, MD. Shift+Enter for new line.
       </p>

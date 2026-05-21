@@ -61,6 +61,8 @@ const STEPS: Step[] = [
   },
 ]
 
+const MAX_VISIBLE = 3
+
 function renderTitle(title: string) {
   const parts = title.split('CoachOS')
   if (parts.length === 1) return <>{title}</>
@@ -100,6 +102,8 @@ export function OnboardingWalkthrough({ onComplete }: Props) {
   }
 
   const step = STEPS[stepIndex]
+  const visible = step.features ? step.features.slice(0, MAX_VISIBLE) : null
+  const hasMore = step.features ? step.features.length > MAX_VISIBLE : false
 
   return (
     <div
@@ -107,7 +111,7 @@ export function OnboardingWalkthrough({ onComplete }: Props) {
       style={{ background: 'rgba(15,15,15,0.80)', backdropFilter: 'blur(6px)' }}
     >
       <div
-        className="w-full max-w-[580px] rounded-3xl relative overflow-hidden animate-fade-up"
+        className="w-full max-w-[620px] rounded-3xl relative overflow-hidden animate-fade-up"
         style={{
           background: 'var(--ccc-cream)',
           boxShadow: '0 32px 80px rgba(0,0,0,0.30)',
@@ -151,7 +155,7 @@ export function OnboardingWalkthrough({ onComplete }: Props) {
 
           {/* Step content */}
           <div
-            className="min-h-[230px]"
+            className="min-h-[250px]"
             style={{ opacity: fading ? 0 : 1, transition: 'opacity 0.16s ease' }}
           >
             <h2
@@ -160,7 +164,7 @@ export function OnboardingWalkthrough({ onComplete }: Props) {
                 fontFamily: 'var(--font-display)',
                 fontStyle: 'italic',
                 fontWeight: 600,
-                fontSize: 'clamp(2rem, 5vw, 2.8rem)',
+                fontSize: 'clamp(2.4rem, 5vw, 3.2rem)',
                 color: 'var(--ccc-near-black)',
               }}
             >
@@ -168,68 +172,103 @@ export function OnboardingWalkthrough({ onComplete }: Props) {
             </h2>
 
             <p
-              className="text-sm leading-relaxed mb-5 max-w-[440px]"
-              style={{ color: 'var(--muted-foreground)', fontFamily: 'var(--font-body)' }}
+              className="leading-relaxed mb-6 max-w-[460px]"
+              style={{
+                color: 'var(--muted-foreground)',
+                fontFamily: 'var(--font-body)',
+                fontSize: '0.9375rem',
+              }}
             >
               {step.body}
             </p>
 
-            {step.features && (
-              <div className="flex flex-wrap gap-2">
-                {step.features.map((f) => (
-                  <span
-                    key={f}
-                    className="px-3 py-1.5 rounded-full text-xs font-medium"
-                    style={{
-                      background: 'rgba(217,36,106,0.07)',
-                      color: 'var(--ccc-raspberry)',
-                      border: '1px solid rgba(217,36,106,0.16)',
-                      fontFamily: 'var(--font-body)',
-                    }}
-                  >
-                    {f}
-                  </span>
-                ))}
+            {visible && (
+              <div>
+                <div className="flex flex-wrap gap-2">
+                  {visible.map((f) => (
+                    <span
+                      key={f}
+                      className="px-3 py-1.5 rounded-full text-sm font-medium"
+                      style={{
+                        background: 'rgba(217,36,106,0.07)',
+                        color: 'var(--ccc-raspberry)',
+                        border: '1px solid rgba(217,36,106,0.16)',
+                        fontFamily: 'var(--font-body)',
+                      }}
+                    >
+                      {f}
+                    </span>
+                  ))}
+                </div>
+                {hasMore && (
+                  <div className="flex items-center gap-3 mt-4">
+                    <div className="flex-1" style={{ height: '1px', background: 'rgba(217,36,106,0.10)' }} />
+                    <span
+                      className="text-xs tracking-wide"
+                      style={{
+                        color: 'var(--muted-foreground)',
+                        opacity: 0.50,
+                        fontFamily: 'var(--font-body)',
+                        fontStyle: 'italic',
+                      }}
+                    >
+                      Plus more
+                    </span>
+                    <div className="flex-1" style={{ height: '1px', background: 'rgba(217,36,106,0.10)' }} />
+                  </div>
+                )}
               </div>
             )}
 
             {step.isFinal && (
               <div className="grid grid-cols-2 gap-3">
                 <div
-                  className="p-4 rounded-xl border"
+                  className="p-5 rounded-xl border"
                   style={{
                     borderColor: 'var(--ccc-tiffany-border)',
                     background: 'var(--ccc-tiffany-muted)',
                   }}
                 >
                   <p
-                    className="text-xs font-bold mb-1"
+                    className="text-[10px] tracking-[0.20em] uppercase font-semibold mb-2"
+                    style={{ color: 'var(--ccc-tiffany)', opacity: 0.65, fontFamily: 'var(--font-body)' }}
+                  >
+                    Option 1
+                  </p>
+                  <p
+                    className="text-sm font-bold mb-1.5"
                     style={{ color: 'var(--ccc-tiffany)', fontFamily: 'var(--font-body)' }}
                   >
                     Upload your documents
                   </p>
                   <p
-                    className="text-xs leading-relaxed"
+                    className="text-sm leading-relaxed"
                     style={{ color: 'var(--muted-foreground)', fontFamily: 'var(--font-body)' }}
                   >
                     Your bio, ICA doc, or offer deck. CoachOS extracts what it needs.
                   </p>
                 </div>
                 <div
-                  className="p-4 rounded-xl border"
+                  className="p-5 rounded-xl border"
                   style={{
                     borderColor: 'var(--ccc-raspberry-border)',
                     background: 'var(--ccc-raspberry-muted)',
                   }}
                 >
                   <p
-                    className="text-xs font-bold mb-1"
+                    className="text-[10px] tracking-[0.20em] uppercase font-semibold mb-2"
+                    style={{ color: 'var(--ccc-raspberry)', opacity: 0.65, fontFamily: 'var(--font-body)' }}
+                  >
+                    Option 2
+                  </p>
+                  <p
+                    className="text-sm font-bold mb-1.5"
                     style={{ color: 'var(--ccc-raspberry)', fontFamily: 'var(--font-body)' }}
                   >
                     Answer the setup questions
                   </p>
                   <p
-                    className="text-xs leading-relaxed"
+                    className="text-sm leading-relaxed"
                     style={{ color: 'var(--muted-foreground)', fontFamily: 'var(--font-body)' }}
                   >
                     Five blocks, one question at a time. Nothing saves until you confirm.
@@ -244,7 +283,6 @@ export function OnboardingWalkthrough({ onComplete }: Props) {
             className="flex items-center justify-between mt-7 pt-5"
             style={{ borderTop: '1px solid var(--border)' }}
           >
-            {/* Progress dots */}
             <div className="flex gap-1.5 items-center">
               {STEPS.map((_, i) => (
                 <div
@@ -260,7 +298,6 @@ export function OnboardingWalkthrough({ onComplete }: Props) {
               ))}
             </div>
 
-            {/* Buttons */}
             <div className="flex gap-2.5">
               {stepIndex > 0 && (
                 <button
@@ -298,7 +335,6 @@ export function OnboardingWalkthrough({ onComplete }: Props) {
           </div>
         </div>
 
-        {/* Skip tour link */}
         {!step.isFinal && (
           <button
             onClick={dismiss}

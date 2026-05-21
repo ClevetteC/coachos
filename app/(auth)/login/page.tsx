@@ -8,81 +8,72 @@ import { Input } from '@/components/ui/input'
 
 const GRAIN = "url(\"data:image/svg+xml,%3Csvg width='300' height='300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")"
 
-/* Dot positions: 6 cols × 5 rows, 52px col gap, 38px row gap */
-const DOT_COLS = 6
-const DOT_ROWS = 5
-const COL_GAP = 52
-const ROW_GAP = 38
-const OFFSET_X = 10
-const OFFSET_Y = 14
-
-function dot(col: number, row: number) {
-  return { x: col * COL_GAP + OFFSET_X, y: row * ROW_GAP + OFFSET_Y }
-}
-
-/* Highlighted nodes with user-outcome labels */
-const NODES = [
-  { ...dot(0, 0), r: 5, stroke: 'rgba(217,36,106,0.55)', fill: 'rgba(217,36,106,0.10)', label: 'CLOSE',   lx: 18,  ly: 9,  lc: 'rgba(217,36,106,0.75)' },
-  { ...dot(2, 1), r: 4, stroke: 'rgba(252,247,232,0.32)', fill: 'rgba(252,247,232,0.06)', label: null,     lx: 0,   ly: 0,  lc: '' },
-  { ...dot(3, 2), r: 5, stroke: 'rgba(37,190,186,0.50)',  fill: 'rgba(37,190,186,0.10)',  label: 'DELIVER', lx: 170, ly: 89, lc: 'rgba(37,190,186,0.75)' },
-  { ...dot(5, 3), r: 4, stroke: 'rgba(217,36,106,0.45)', fill: 'rgba(217,36,106,0.08)',  label: 'BUILD',   lx: 257, ly: 123, lc: 'rgba(252,247,232,0.50)' },
-  { ...dot(1, 4), r: 3.5, stroke: 'rgba(37,190,186,0.38)', fill: 'rgba(37,190,186,0.07)', label: null,    lx: 0,   ly: 0,  lc: '' },
+const PILLARS = [
+  {
+    label: 'CLOSE',
+    accent: 'rgba(217,36,106,0.85)',
+    border: 'rgba(217,36,106,0.18)',
+    items: ['Proposals in your voice', 'LinkedIn sequences'],
+  },
+  {
+    label: 'DELIVER',
+    accent: 'rgba(37,190,186,0.85)',
+    border: 'rgba(37,190,186,0.18)',
+    items: ['Session prep', 'Progress tracking'],
+  },
+  {
+    label: 'BUILD',
+    accent: 'rgba(252,247,232,0.65)',
+    border: 'rgba(252,247,232,0.10)',
+    items: ['Workshop scripts', 'Landing pages'],
+  },
 ]
 
-const CONNECTIONS = [
-  [dot(0,0), dot(2,1)],
-  [dot(2,1), dot(3,2)],
-  [dot(3,2), dot(5,3)],
-  [dot(1,4), dot(3,2)],
-]
-
-function WorkflowGraphic() {
-  const w = (DOT_COLS - 1) * COL_GAP + OFFSET_X * 2
-  const h = (DOT_ROWS - 1) * ROW_GAP + OFFSET_Y * 2
-  const nodeSet = new Set(NODES.map(n => `${n.x},${n.y}`))
-
+function PillarGrid() {
   return (
-    <svg viewBox={`0 0 ${w} ${h}`} fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: '100%' }}>
-      {/* Background grid dots */}
-      {Array.from({ length: DOT_ROWS }, (_, row) =>
-        Array.from({ length: DOT_COLS }, (_, col) => {
-          const { x, y } = dot(col, row)
-          if (nodeSet.has(`${x},${y}`)) return null
-          return <circle key={`${col}-${row}`} cx={x} cy={y} r={1.5} fill="rgba(252,247,232,0.08)" />
-        })
-      )}
-
-      {/* Connection lines */}
-      {CONNECTIONS.map(([a, b], i) => (
-        <line
-          key={i}
-          x1={a.x} y1={a.y} x2={b.x} y2={b.y}
-          stroke="rgba(252,247,232,0.10)"
-          strokeWidth="1"
-          strokeDasharray="3 4"
-        />
-      ))}
-
-      {/* Highlighted nodes */}
-      {NODES.map((n, i) => (
-        <circle key={i} cx={n.x} cy={n.y} r={n.r} fill={n.fill} stroke={n.stroke} strokeWidth="1" />
-      ))}
-
-      {/* Labels */}
-      {NODES.filter(n => n.label).map((n, i) => (
-        <text
-          key={i}
-          x={n.lx} y={n.ly}
-          fill={n.lc}
-          fontSize="6.5"
-          fontFamily="'Plus Jakarta Sans', sans-serif"
-          fontWeight="600"
-          letterSpacing="1.8"
+    <div className="flex flex-col gap-3">
+      <div className="grid grid-cols-3 gap-3">
+        {PILLARS.map((col) => (
+          <div
+            key={col.label}
+            className="p-4 rounded-xl flex flex-col gap-2"
+            style={{ background: 'rgba(252,247,232,0.04)', border: `1px solid ${col.border}` }}
+          >
+            <p
+              className="text-[9px] tracking-[0.22em] uppercase font-semibold"
+              style={{ color: col.accent, fontFamily: 'var(--font-body)' }}
+            >
+              {col.label}
+            </p>
+            {col.items.map((item) => (
+              <p
+                key={item}
+                className="text-xs leading-snug"
+                style={{ color: 'rgba(252,247,232,0.48)', fontFamily: 'var(--font-body)' }}
+              >
+                {item}
+              </p>
+            ))}
+            <p
+              className="text-[10px] pt-1"
+              style={{ color: 'rgba(252,247,232,0.22)', fontFamily: 'var(--font-body)', fontStyle: 'italic' }}
+            >
+              Plus more
+            </p>
+          </div>
+        ))}
+      </div>
+      <div className="flex items-center gap-3">
+        <div className="flex-1" style={{ height: '1px', background: 'rgba(252,247,232,0.07)' }} />
+        <p
+          className="text-[9px] tracking-[0.22em] uppercase"
+          style={{ color: 'rgba(252,247,232,0.20)', fontFamily: 'var(--font-body)' }}
         >
-          {n.label}
-        </text>
-      ))}
-    </svg>
+          Plus more
+        </p>
+        <div className="flex-1" style={{ height: '1px', background: 'rgba(252,247,232,0.07)' }} />
+      </div>
+    </div>
   )
 }
 
@@ -180,9 +171,7 @@ export default function LoginPage() {
             <span style={{ color: 'var(--ccc-raspberry)' }}>Build faster.</span>
           </h2>
 
-          <div className="stat-rule-light mb-8" />
-
-          <WorkflowGraphic />
+          <PillarGrid />
         </div>
 
         {/* Bottom spacer */}

@@ -190,15 +190,16 @@ function MarkdownContent({ content }: { content: string }) {
           case 'heading': {
             const Tag = `h${token.level}` as 'h1' | 'h2' | 'h3'
             const cls = token.level === 1
-              ? 'text-base font-bold tracking-tight mt-1'
+              ? 'font-bold tracking-tight mt-1'
               : token.level === 2
-              ? 'text-[0.9rem] font-semibold mt-0.5'
-              : 'text-sm font-semibold'
+              ? 'font-semibold mt-0.5'
+              : 'font-semibold'
+            const sz = token.level === 1 ? '16px' : token.level === 2 ? '15px' : '14.5px'
             return (
               <Tag
                 key={idx}
                 className={cls}
-                style={{ color: 'var(--ccc-near-black)', fontFamily: 'var(--font-body)' }}
+                style={{ color: 'var(--ccc-near-black)', fontFamily: 'var(--font-body)', fontSize: sz }}
               >
                 {renderInline(token.text)}
               </Tag>
@@ -208,15 +209,15 @@ function MarkdownContent({ content }: { content: string }) {
             return <hr key={idx} className="my-1" style={{ borderColor: 'var(--border)' }} />
           case 'ul':
             return (
-              <ul key={idx} className="space-y-1 pl-4">
+              <ul key={idx} className="space-y-1.5 pl-4">
                 {token.items.map((item, j) => (
                   <li
                     key={j}
-                    className="text-sm leading-relaxed flex gap-2"
-                    style={{ color: 'var(--ccc-near-black)', fontFamily: 'var(--font-body)' }}
+                    className="leading-relaxed flex gap-2"
+                    style={{ color: 'var(--ccc-near-black)', fontFamily: 'var(--font-body)', fontSize: '14.5px' }}
                   >
                     <span
-                      className="mt-[7px] shrink-0 w-1 h-1 rounded-full"
+                      className="mt-[8px] shrink-0 w-1 h-1 rounded-full"
                       style={{ background: 'var(--ccc-raspberry)', opacity: 0.55 }}
                     />
                     <span>{renderInline(item)}</span>
@@ -226,16 +227,16 @@ function MarkdownContent({ content }: { content: string }) {
             )
           case 'ol':
             return (
-              <ol key={idx} className="space-y-1 pl-4">
+              <ol key={idx} className="space-y-1.5 pl-4">
                 {token.items.map((item, j) => (
                   <li
                     key={j}
-                    className="text-sm leading-relaxed flex gap-2"
-                    style={{ color: 'var(--ccc-near-black)', fontFamily: 'var(--font-body)' }}
+                    className="leading-relaxed flex gap-2"
+                    style={{ color: 'var(--ccc-near-black)', fontFamily: 'var(--font-body)', fontSize: '14.5px' }}
                   >
                     <span
                       className="shrink-0 tabular-nums font-semibold"
-                      style={{ color: 'var(--ccc-raspberry)', fontSize: '0.75rem' }}
+                      style={{ color: 'var(--ccc-raspberry)', fontSize: '12px' }}
                     >
                       {j + 1}.
                     </span>
@@ -268,8 +269,8 @@ function MarkdownContent({ content }: { content: string }) {
                       {token.header.map((h, j) => (
                         <th
                           key={j}
-                          className="text-left py-1.5 pr-4 font-semibold text-xs"
-                          style={{ color: 'var(--ccc-near-black)', fontFamily: 'var(--font-body)' }}
+                          className="text-left py-2 pr-4 font-semibold"
+                          style={{ color: 'var(--ccc-near-black)', fontFamily: 'var(--font-body)', fontSize: '13px' }}
                         >
                           {renderInline(h)}
                         </th>
@@ -282,8 +283,8 @@ function MarkdownContent({ content }: { content: string }) {
                         {row.map((cell, k) => (
                           <td
                             key={k}
-                            className="py-1.5 pr-4 text-xs"
-                            style={{ color: 'var(--muted-foreground)', fontFamily: 'var(--font-body)' }}
+                            className="py-2 pr-4"
+                            style={{ color: 'var(--muted-foreground)', fontFamily: 'var(--font-body)', fontSize: '13px' }}
                           >
                             {renderInline(cell)}
                           </td>
@@ -301,8 +302,8 @@ function MarkdownContent({ content }: { content: string }) {
             return (
               <p
                 key={idx}
-                className="text-sm leading-relaxed"
-                style={{ color: 'var(--ccc-near-black)', fontFamily: 'var(--font-body)' }}
+                className="leading-relaxed"
+                style={{ color: 'var(--ccc-near-black)', fontFamily: 'var(--font-body)', fontSize: '14.5px' }}
               >
                 {renderInline(token.text)}
               </p>
@@ -322,12 +323,13 @@ export function Message({ role, content, isStreaming, isLast, onOptionClick }: P
     return (
       <div className="flex justify-end">
         <div
-          className="max-w-[80%] rounded-2xl rounded-br-sm px-4 py-3 text-sm leading-relaxed whitespace-pre-wrap font-medium"
+          className="max-w-[80%] rounded-2xl rounded-br-sm px-5 py-3.5 leading-relaxed whitespace-pre-wrap font-medium"
           style={{
             background: 'var(--ccc-raspberry)',
             color: '#FCF7E8',
             fontFamily: 'var(--font-body)',
-            boxShadow: '0 2px 12px rgba(217,36,106,0.18)',
+            fontSize: '14.5px',
+            boxShadow: '0 2px 16px rgba(217,36,106,0.22)',
           }}
         >
           {content}
