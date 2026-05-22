@@ -1065,69 +1065,121 @@ VA, OBM, Associate Coach, Content Manager.
 Written in your locked voice. Specific to your business context, not generic "here's what a VA does."
 `
 
-// ─── Tier groupings ───────────────────────────────────────────────────────────
+// ─── Skill map (name → content) ──────────────────────────────────────────────
 
-const STARTER_SKILLS = [
-  ONBOARDING_SKILL,
-  NAVIGATOR_SKILL,
-  VOICE_CHECK_SKILL,
-  VOICE_PROFILE_SKILL,
-  ICA_LOCK_SKILL,
-  OFFER_STACK_SKILL,
-  CREDENTIAL_BANK_SKILL,
-  SOCIAL_ENGINE_SKILL,
-  EMAIL_SEQUENCE_SKILL,
-]
+const SKILL_MAP: Record<string, string> = {
+  'onboarding': ONBOARDING_SKILL,
+  'navigator': NAVIGATOR_SKILL,
+  'voice-check': VOICE_CHECK_SKILL,
+  'voice-profile': VOICE_PROFILE_SKILL,
+  'ica-lock': ICA_LOCK_SKILL,
+  'offer-stack': OFFER_STACK_SKILL,
+  'credential-bank': CREDENTIAL_BANK_SKILL,
+  'social-engine': SOCIAL_ENGINE_SKILL,
+  'email-sequence-builder': EMAIL_SEQUENCE_SKILL,
+  'prospect-deepdive': PROSPECT_DEEPDIVE_SKILL,
+  'industry-swot': INDUSTRY_SWOT_SKILL,
+  'positioning-angles': POSITIONING_ANGLES_SKILL,
+  'linkedin-outreach': LINKEDIN_OUTREACH_SKILL,
+  'discovery-prep': DISCOVERY_PREP_SKILL,
+  'proposal-builder': PROPOSAL_BUILDER_SKILL,
+  'follow-up-engine': FOLLOW_UP_ENGINE_SKILL,
+  'objection-library': OBJECTION_LIBRARY_SKILL,
+  'contract-builder': CONTRACT_BUILDER_SKILL,
+  'landing-page-builder': LANDING_PAGE_BUILDER_SKILL,
+  'workshop-script': WORKSHOP_SCRIPT_SKILL,
+  'conversion-check': CONVERSION_CHECK_SKILL,
+  'coach-os': COACH_OS_SKILL,
+  'revenue-health': REVENUE_HEALTH_SKILL,
+  'invoice-chase': INVOICE_CHASE_SKILL,
+  'pipeline-brief': PIPELINE_BRIEF_SKILL,
+  'monday-brief': MONDAY_BRIEF_SKILL,
+  'client-health': CLIENT_HEALTH_SKILL,
+  'outreach-gate': OUTREACH_GATE_SKILL,
+  'content-calendar': CONTENT_CALENDAR_SKILL,
+  'contract-reviewer': CONTRACT_REVIEWER_SKILL,
+  'business-pulse': BUSINESS_PULSE_SKILL,
+  'ad-campaign-builder': AD_CAMPAIGN_BUILDER_SKILL,
+  'session-prep': SESSION_PREP_SKILL,
+  'progress-tracker': PROGRESS_TRACKER_SKILL,
+  'expansion-detector': EXPANSION_DETECTOR_SKILL,
+  'outcomes-tracker': OUTCOMES_TRACKER_SKILL,
+  'testimonial-engine': TESTIMONIAL_ENGINE_SKILL,
+  'referral-trigger': REFERRAL_TRIGGER_SKILL,
+  'price-optimizer': PRICE_OPTIMIZER_SKILL,
+  'competitor-radar': COMPETITOR_RADAR_SKILL,
+  'quarterly-review': QUARTERLY_REVIEW_SKILL,
+  'hiring-brief': HIRING_BRIEF_SKILL,
+}
 
-const GROWTH_SKILLS = [
-  PROSPECT_DEEPDIVE_SKILL,
-  INDUSTRY_SWOT_SKILL,
-  POSITIONING_ANGLES_SKILL,
-  LINKEDIN_OUTREACH_SKILL,
-  DISCOVERY_PREP_SKILL,
-  PROPOSAL_BUILDER_SKILL,
-  FOLLOW_UP_ENGINE_SKILL,
-  OBJECTION_LIBRARY_SKILL,
-  CONTRACT_BUILDER_SKILL,
-  LANDING_PAGE_BUILDER_SKILL,
-  WORKSHOP_SCRIPT_SKILL,
-  CONVERSION_CHECK_SKILL,
-  COACH_OS_SKILL,
-  REVENUE_HEALTH_SKILL,
-  INVOICE_CHASE_SKILL,
-  PIPELINE_BRIEF_SKILL,
-  MONDAY_BRIEF_SKILL,
-  CLIENT_HEALTH_SKILL,
-  OUTREACH_GATE_SKILL,
-  CONTENT_CALENDAR_SKILL,
-  CONTRACT_REVIEWER_SKILL,
-  BUSINESS_PULSE_SKILL,
-]
+// ─── Compact registry (replaces full skill content in system prompt) ──────────
 
-const SCALE_SKILLS = [
-  AD_CAMPAIGN_BUILDER_SKILL,
-  SESSION_PREP_SKILL,
-  PROGRESS_TRACKER_SKILL,
-  EXPANSION_DETECTOR_SKILL,
-  OUTCOMES_TRACKER_SKILL,
-  TESTIMONIAL_ENGINE_SKILL,
-  REFERRAL_TRIGGER_SKILL,
-  PRICE_OPTIMIZER_SKILL,
-  COMPETITOR_RADAR_SKILL,
-  QUARTERLY_REVIEW_SKILL,
-  HIRING_BRIEF_SKILL,
-]
+const STARTER_REGISTRY = `- onboarding: 5-block setup interview; writes all foundation data to database
+- navigator: routing menu for vague openers ("help", "menu", "options")
+- voice-check: score output against voice-profile (75+ overall, 18+ voice-fit to pass)
+- voice-profile: build or refresh voice-profile foundation data (BUILD / READ modes)
+- ica-lock: build or refresh ICA foundation data (BUILD / READ modes)
+- offer-stack: build or refresh offer ladder foundation data (BUILD / READ modes)
+- credential-bank: build or refresh proof points foundation data (BUILD / READ modes)
+- social-engine: weekly content cadence across LinkedIn, Instagram, X
+- email-sequence-builder: multi-email nurture, launch, re-engagement sequences`
 
-export function getSkillContent(tier: string): string {
-  const skills: string[] = [...STARTER_SKILLS]
+const GROWTH_REGISTRY = `- prospect-deepdive: complete intelligence dossier on a named company
+- industry-swot: SWOT lensed through your offers (finding + implication + angle per entry)
+- positioning-angles: 3-5 ranked angles for a named prospect; feeds all outreach skills
+- linkedin-outreach: 4-touch DM sequence from a positioning angle
+- discovery-prep: one-page pre-call brief (summary, angle, objections, receipts, questions)
+- proposal-builder: 10-section proposal; requires deepdive + swot + angles + ica + offers + credentials
+- follow-up-engine: follow-up sequences for post-call, post-proposal, post-retainer states
+- objection-library: voice-matched responses to top 12 objections (BUILD / READ modes)
+- contract-builder: engagement contract from a signed proposal
+- landing-page-builder: 7-section long-form sales page with voice-check + conversion-check
+- workshop-script: complete masterclass script (hook, content sections, pitch, close)
+- conversion-check: score sales assets on 5 dimensions (75+ to pass)
+- coach-os: meta-orchestrator for Patterns A through K
+- revenue-health: monthly revenue snapshot — received, expected, at-risk, 30/60/90 projection
+- invoice-chase: tone-matched payment follow-ups (3 tones; hard approval gate)
+- pipeline-brief: scored top-3 prospects to contact today + stale deals list
+- monday-brief: 5-minute Monday startup brief; one highest-leverage action
+- client-health: Green/Yellow/Red churn risk per active client; one action per at-risk client
+- outreach-gate: pre-send approval gate; nothing sends until user types "send"
+- content-calendar: 4-week calendar with push/educate/warm week mapping
+- contract-reviewer: incoming contract review across 8 risk categories (Red/Yellow/Green)
+- business-pulse: Friday end-of-week snapshot across revenue, sales, content, delivery`
+
+const SCALE_REGISTRY = `- ad-campaign-builder: ad variants for LinkedIn, Facebook/Instagram, and Google
+- session-prep: pre-session brief (state, agenda, decisions due, expansion signal)
+- progress-tracker: milestone progress report at weeks 4, 8, 12 of a retainer
+- expansion-detector: detect when and how to pitch the next offer to an active client
+- outcomes-tracker: log real-world results; aggregate pattern report after 5+ outcomes
+- testimonial-engine: voice-matched testimonial requests at defined journey moments
+- referral-trigger: detect referral readiness; produce ask + client-forwardable brief
+- price-optimizer: effective hourly rate and three pricing scenarios (data-only)
+- competitor-radar: monitor named competitors; two-line impact assessment per finding
+- quarterly-review: full QBR across 6 areas; saves on approval
+- hiring-brief: 6-part hiring packet for VA, OBM, Associate Coach, Content Manager`
+
+// ─── Exports ─────────────────────────────────────────────────────────────────
+
+export function getSingleSkillContent(skillName: string): string | null {
+  return SKILL_MAP[skillName] ?? null
+}
+
+export function getSkillRegistry(tier: string): string {
+  const lines = [
+    'Call get_skill_content with a skill name to load its full instructions before executing it.',
+    '',
+    '### Starter (always available)',
+    STARTER_REGISTRY,
+  ]
 
   if (tier === 'growth' || tier === 'scale') {
-    skills.push(...GROWTH_SKILLS)
+    lines.push('', '### Growth (your plan includes these)', GROWTH_REGISTRY)
   }
 
   if (tier === 'scale') {
-    skills.push(...SCALE_SKILLS)
+    lines.push('', '### Scale (your plan includes these)', SCALE_REGISTRY)
   }
 
-  return skills.join('\n\n---\n\n')
+  return lines.join('\n')
 }

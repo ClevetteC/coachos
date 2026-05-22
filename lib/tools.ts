@@ -2,6 +2,22 @@ import type Anthropic from '@anthropic-ai/sdk'
 
 export const COACH_OS_TOOLS: Anthropic.Tool[] = [
   {
+    name: 'get_skill_content',
+    description:
+      'Load the full instructions for a specific skill before executing it. Call this whenever you are about to run a skill — do not attempt to run a skill without first loading its instructions via this tool.',
+    input_schema: {
+      type: 'object' as const,
+      properties: {
+        skill_name: {
+          type: 'string',
+          description:
+            'The skill name exactly as listed in the skill registry, e.g. "prospect-deepdive", "proposal-builder", "voice-check".',
+        },
+      },
+      required: ['skill_name'],
+    },
+  },
+  {
     name: 'save_foundation_data',
     description:
       'Save or update one of the four foundation files for the user. Call this whenever you finish building or updating voice_profile, ica, offer_stack, or credential_bank during onboarding or a refresh.',

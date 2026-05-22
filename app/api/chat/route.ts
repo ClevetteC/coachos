@@ -2,11 +2,14 @@ import { NextRequest, NextResponse } from 'next/server'
 import { anthropic } from '@/lib/anthropic'
 import { buildSystemPrompt } from '@/lib/system-prompt'
 import { COACH_OS_TOOLS } from '@/lib/tools'
+import { getSingleSkillContent } from '@/lib/skill-content'
 import { createClient } from '@/lib/supabase/server'
 import type Anthropic from '@anthropic-ai/sdk'
 
 export const runtime = 'nodejs'
 export const maxDuration = 60
+
+const MAX_TURNS = 40
 
 type MessageParam = Anthropic.MessageParam
 
@@ -16,6 +19,13 @@ async function executeTool(
   userId: string
 ): Promise<string> {
   const supabase = await createClient()
+
+  if (toolName === 'get_skill_content') {
+    const { skill_name } = toolInput as { skill_name: string }
+    const content = getSingleSkillContent(skill_name)
+    if (!content) return `Skill "${skill_name}" not found. Check the skill registry for valid names.`
+    return content
+  }
 
   if (toolName === 'save_foundation_data') {
     const { type, data } = toolInput as { type: string; data: Record<string, unknown> }
@@ -109,6 +119,25 @@ export async function POST(request: NextRequest) {
     convId = conv.id
   }
 
+  // Turn limit: count completed assistant turns
+  const completedTurns = messages.filter((m) => m.role === 'assistant').length
+  if (completedTurns >= MAX_TURNS) {
+    const enc = new TextEncoder()
+    const limitStream = new ReadableStream({
+      start(ctrl) {
+        ctrl.enqueue(enc.encode(`event: context_limit\ndata: ${JSON.stringify({ context_limit: true })}\n\n`))
+        ctrl.close()
+      },
+    })
+    return new Response(limitStream, {
+      headers: {
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache',
+        'Connection': 'keep-alive',
+      },
+    })
+  }
+
   // Save incoming user message
   const lastUserMessage = messages[messages.length - 1]
   if (lastUserMessage?.role === 'user') {
@@ -121,7 +150,7 @@ export async function POST(request: NextRequest) {
     })
   }
 
-  const systemPrompt = await buildSystemPrompt(user.id)
+  const { stable, dynamic } = await buildSystemPrompt(user.id)
 
   const encoder = new TextEncoder()
 
@@ -146,7 +175,10 @@ export async function POST(request: NextRequest) {
           const response = await anthropic.messages.create({
             model: 'claude-sonnet-4-6',
             max_tokens: 4096,
-            system: systemPrompt,
+            system: [
+              { type: 'text', text: stable, cache_control: { type: 'ephemeral' } },
+              { type: 'text', text: dynamic },
+            ],
             messages: currentMessages,
             tools: COACH_OS_TOOLS,
             stream: true,

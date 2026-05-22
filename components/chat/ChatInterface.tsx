@@ -23,6 +23,7 @@ export function ChatInterface({ conversationId, initialMessages }: Props) {
   const [currentId, setCurrentId] = useState<string | null>(conversationId)
   const [triggerUpload, setTriggerUpload] = useState(false)
   const [showOnboarding, setShowOnboarding] = useState(false)
+  const [contextLimitHit, setContextLimitHit] = useState(false)
   const abortRef = useRef<AbortController | null>(null)
 
   useEffect(() => {
@@ -95,7 +96,17 @@ export function ChatInterface({ conversationId, initialMessages }: Props) {
           if (line.startsWith('data: ')) {
             try {
               const parsed = JSON.parse(line.slice(6))
-              if (parsed.text !== undefined) {
+              if (parsed.context_limit) {
+                setContextLimitHit(true)
+                setMessages((prev) => {
+                  const updated = [...prev]
+                  updated[updated.length - 1] = {
+                    role: 'assistant',
+                    content: 'This conversation has reached its limit. Start a new one to keep going.',
+                  }
+                  return updated
+                })
+              } else if (parsed.text !== undefined) {
                 assistantText += parsed.text
                 setMessages((prev) => {
                   const updated = [...prev]
@@ -150,9 +161,22 @@ export function ChatInterface({ conversationId, initialMessages }: Props) {
         onStartInterview={() => sendMessage('Get me set up')}
         onOptionClick={(option) => sendMessage(option)}
       />
+      {contextLimitHit && (
+        <div className="px-4 py-3 border-t border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 flex items-center justify-between gap-3">
+          <p className="text-sm text-neutral-500 dark:text-neutral-400">
+            Conversation limit reached.
+          </p>
+          <a
+            href="/chat"
+            className="text-sm font-medium px-3 py-1.5 rounded-md bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 hover:opacity-80 transition-opacity whitespace-nowrap"
+          >
+            Start new conversation
+          </a>
+        </div>
+      )}
       <InputBar
         onSend={sendMessage}
-        disabled={streaming}
+        disabled={streaming || contextLimitHit}
         triggerUpload={triggerUpload}
         onUploadTriggered={() => setTriggerUpload(false)}
       />

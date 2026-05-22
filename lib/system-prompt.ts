@@ -1,5 +1,5 @@
 import { createClient } from './supabase/server'
-import { getSkillContent } from './skill-content'
+import { getSkillRegistry } from './skill-content'
 import type { FoundationDataType } from './supabase/types'
 
 const CLAUDE_MD = `
@@ -92,7 +92,12 @@ type FoundationRow = {
   data: Record<string, unknown>
 }
 
-export async function buildSystemPrompt(userId: string): Promise<string> {
+export type SystemPromptParts = {
+  stable: string
+  dynamic: string
+}
+
+export async function buildSystemPrompt(userId: string): Promise<SystemPromptParts> {
   const supabase = await createClient()
 
   const [foundationResult, statusResult] = await Promise.all([
@@ -115,23 +120,26 @@ export async function buildSystemPrompt(userId: string): Promise<string> {
   const foundationBlocks = foundationRows
     .map((row) => {
       const label = row.type.replace(/_/g, '-')
-      return `## ${label}.json\n\`\`\`json\n${JSON.stringify(row.data, null, 2)}\n\`\`\``
+      return `## ${label}\n\`\`\`json\n${JSON.stringify(row.data)}\n\`\`\``
     })
     .join('\n\n')
 
   const setupBlock = setupStatus
-    ? `## setup-status\n\`\`\`json\n${JSON.stringify(setupStatus, null, 2)}\n\`\`\``
-    : `## setup-status\n\`\`\`json\n{"onboarding_complete": false, "percentage_complete": 0, "tier": "starter"}\n\`\`\``
+    ? `## setup-status\n\`\`\`json\n${JSON.stringify(setupStatus)}\n\`\`\``
+    : `## setup-status\n\`\`\`json\n{"onboarding_complete":false,"percentage_complete":0,"tier":"starter"}\n\`\`\``
 
-  const skillContent = `## Skills loaded for this session\n\n${getSkillContent(tier)}`
-
-  return [
+  const stable = [
     CLAUDE_MD,
     '---',
+    '## Available skills',
+    getSkillRegistry(tier),
+  ].join('\n\n')
+
+  const dynamic = [
     '## User foundation data',
     setupBlock,
     foundationBlocks || '(No foundation files written yet. Onboarding has not run.)',
-    '---',
-    skillContent,
   ].join('\n\n')
+
+  return { stable, dynamic }
 }
