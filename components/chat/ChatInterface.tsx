@@ -74,7 +74,12 @@ export function ChatInterface({ conversationId, initialMessages }: Props) {
         signal: abortRef.current.signal,
       })
 
-      if (!response.ok || !response.body) throw new Error('Request failed')
+      if (!response.ok || !response.body) {
+        setMessages((prev) => [...prev, { role: 'assistant', content: 'Something went wrong. Please try again.' }])
+        setStreaming(false)
+        abortRef.current = null
+        return
+      }
 
       const reader = response.body.getReader()
       const decoder = new TextDecoder()
@@ -123,14 +128,7 @@ export function ChatInterface({ conversationId, initialMessages }: Props) {
       }
     } catch (err) {
       if (err instanceof Error && err.name !== 'AbortError') {
-        setMessages((prev) => {
-          const updated = [...prev]
-          updated[updated.length - 1] = {
-            role: 'assistant',
-            content: 'Something went wrong. Please try again.',
-          }
-          return updated
-        })
+        setMessages((prev) => [...prev, { role: 'assistant', content: 'Something went wrong. Please try again.' }])
       }
     } finally {
       setStreaming(false)

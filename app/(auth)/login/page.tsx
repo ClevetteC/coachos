@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { formatAuthError } from '@/lib/auth-messages'
@@ -83,24 +83,28 @@ export default function LoginPage() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const submittingRef = useRef(false)
 
   useEffect(() => {
     const param = new URLSearchParams(window.location.search).get('error')
     if (param === 'email_not_confirmed') {
       setError(formatAuthError('Email not confirmed'))
     } else if (param === 'confirmation_failed') {
-      setError('Email confirmation failed or expired. Sign up again or contact support.')
+      setError('Email confirmation failed or expired. Try signing up again or contact support.')
     }
   }, [])
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault()
+    if (submittingRef.current || loading) return
+    submittingRef.current = true
     setLoading(true)
     setError('')
 
     const supabase = createClient()
     const { error: signInError } = await supabase.auth.signInWithPassword({ email, password })
 
+    submittingRef.current = false
     if (signInError) {
       setError(formatAuthError(signInError.message))
       setLoading(false)
@@ -196,11 +200,11 @@ export default function LoginPage() {
           </div>
 
           <form onSubmit={handleLogin} className="space-y-3 animate-fade-up delay-2">
-            <Input type="email" placeholder="Email address" value={email}
-              onChange={(e) => setEmail(e.target.value)} required autoFocus
+            <Input type="email" name="email" autoComplete="email" placeholder="Email address" value={email}
+              onChange={(e) => setEmail(e.target.value)} required autoFocus disabled={loading}
               className="h-12 text-sm" style={{ fontFamily: 'var(--font-body)' }} />
-            <Input type="password" placeholder="Password" value={password}
-              onChange={(e) => setPassword(e.target.value)} required
+            <Input type="password" name="password" autoComplete="current-password" placeholder="Password" value={password}
+              onChange={(e) => setPassword(e.target.value)} required disabled={loading}
               className="h-12 text-sm" style={{ fontFamily: 'var(--font-body)' }} />
             {error && (
               <p className="text-sm font-medium" style={{ color: 'var(--destructive)', fontFamily: 'var(--font-body)' }}>{error}</p>
