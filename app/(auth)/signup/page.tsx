@@ -13,19 +13,19 @@ const PILLARS = [
     label: 'CLOSE',
     accent: 'rgba(217,36,106,0.85)',
     border: 'rgba(217,36,106,0.18)',
-    items: ['Proposals in your voice', 'LinkedIn sequences'],
+    items: ['Proposals in your voice', 'LinkedIn sequences', 'Prospect research'],
   },
   {
     label: 'DELIVER',
     accent: 'rgba(37,190,186,0.85)',
     border: 'rgba(37,190,186,0.18)',
-    items: ['Session prep', 'Progress tracking'],
+    items: ['Session prep', 'Progress tracking', 'Client health checks'],
   },
   {
     label: 'BUILD',
     accent: 'rgba(252,247,232,0.65)',
     border: 'rgba(252,247,232,0.10)',
-    items: ['Workshop scripts', 'Landing pages'],
+    items: ['Workshop scripts', 'Landing pages', 'Email campaigns'],
   },
 ]
 
@@ -151,7 +151,7 @@ export default function SignupPage() {
         <div className="animate-slide-left delay-2 relative z-10">
           <p className="text-[9px] tracking-[0.28em] uppercase mb-8 font-semibold"
             style={{ color: 'var(--ccc-tiffany)', fontFamily: 'var(--font-body)' }}>
-            Clevette Coombs Consulting
+            For coaches · consultants · solopreneurs
           </p>
 
           <h2 className="tracking-tight mb-10"
@@ -184,8 +184,8 @@ export default function SignupPage() {
                 Check your email.
               </h1>
               <p className="text-sm mt-5" style={{ color: 'var(--muted-foreground)', fontFamily: 'var(--font-body)' }}>
-                If this email is eligible for CoachOS, a confirmation link is on its way to <strong>{email}</strong>.
-                Click it to activate your account. Check spam if you do not see it within a few minutes.
+                A confirmation link is on its way to <strong>{email}</strong>.
+                Click it to activate your CoachOS account. Check spam if you do not see it within a few minutes.
               </p>
               <p className="text-sm mt-3" style={{ color: 'var(--muted-foreground)', fontFamily: 'var(--font-body)' }}>
                 Already confirmed?{' '}
@@ -200,10 +200,10 @@ export default function SignupPage() {
               fontSize: 'clamp(3rem, 7vw, 4.4rem)', lineHeight: '0.90', letterSpacing: '-0.01em',
               color: 'var(--ccc-near-black)',
             }}>
-              Create account.
+              Your OS starts here.
             </h1>
             <p className="text-sm mt-4 leading-relaxed" style={{ color: 'var(--muted-foreground)', fontFamily: 'var(--font-body)' }}>
-              Not a prompt library. A complete operating system that reads your voice, your ideal client, and your offers, then runs your full sales and content workflows end to end.
+              Not a prompt library. The complete operating system for coaches, consultants, and solopreneurs. Reads your voice, your ideal client, and your offers — then runs your full sales and content workflows end to end.
             </p>
           </div>
 
@@ -240,7 +240,7 @@ export default function SignupPage() {
           <div className="mt-12 animate-fade-up delay-4">
             <div className="stat-rule mb-5" />
             <p className="text-[10px] tracking-[0.18em] uppercase" style={{ color: 'var(--muted-foreground)', opacity: 0.45, fontFamily: 'var(--font-body)' }}>
-              AI operating system for coaches and consultants
+              The OS for coaches, consultants &amp; solopreneurs
             </p>
           </div>
           </>

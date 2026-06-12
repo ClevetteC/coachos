@@ -19,8 +19,10 @@ interface Props {
 const QUICK_PROMPTS = [
   'Research a prospect',
   'Write a proposal',
-  'Build outreach',
-  'Check my content',
+  'Build LinkedIn outreach',
+  'Launch a new offer',
+  'Prep for my next session',
+  'Check my content quality',
 ]
 
 const ARROW = (
@@ -33,17 +35,17 @@ const ALL_CAPABILITIES = [
   {
     label: 'Close clients',
     labelColor: 'var(--ccc-raspberry)',
-    items: ['Prospect research', 'Industry SWOT', 'Positioning angles', 'LinkedIn sequences', 'Discovery prep', 'Proposals and contracts', 'Follow-up engine'],
+    items: ['Prospect research', 'Industry SWOT', 'Positioning angles', 'LinkedIn sequences', 'Discovery prep', 'Proposals and contracts', 'Follow-up engine', 'Contract builder'],
   },
   {
-    label: 'Marketing and content',
+    label: 'Market and deliver',
     labelColor: 'var(--ccc-tiffany)',
-    items: ['Landing pages', 'Email campaigns', 'Workshop scripts', 'Ad copy', 'Social content', 'Content calendar', 'Objection library'],
+    items: ['Landing pages', 'Email campaigns', 'Workshop scripts', 'Ad copy', 'Social content', 'Content calendar', 'Objection library', 'Session prep', 'Progress tracking'],
   },
   {
-    label: 'Operations',
+    label: 'Run your business',
     labelColor: 'rgba(28,28,28,0.45)',
-    items: ['Monday brief', 'Revenue health', 'Pipeline review', 'Client health', 'Quarterly review', 'Invoice follow-up', 'Business pulse', 'Hiring brief'],
+    items: ['Monday brief', 'Revenue health', 'Pipeline review', 'Client health', 'Quarterly review', 'Invoice follow-up', 'Business pulse', 'Outcomes tracker', 'Referral trigger'],
   },
 ]
 
@@ -219,7 +221,7 @@ export function MessageList({ messages, streaming, onUpload, onStartInterview, o
               marginBottom: '2.25rem',
             }}
           >
-            Build your foundation once. CoachOS reads your voice, your ideal client, and your offers, then runs your full sales and content workflow from there. Every output is quality-checked before it reaches you.
+            The OS for coaches, consultants, and solopreneurs. Build your foundation once — voice profile, ideal client, offer stack — and CoachOS runs every sales, content, and delivery workflow in your voice. Every output is quality-checked before it reaches you.
           </p>
 
           {/* Capabilities overview */}

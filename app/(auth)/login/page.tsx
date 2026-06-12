@@ -13,19 +13,19 @@ const PILLARS = [
     label: 'CLOSE',
     accent: 'rgba(217,36,106,0.85)',
     border: 'rgba(217,36,106,0.18)',
-    items: ['Proposals in your voice', 'LinkedIn sequences'],
+    items: ['Proposals in your voice', 'LinkedIn sequences', 'Prospect research'],
   },
   {
     label: 'DELIVER',
     accent: 'rgba(37,190,186,0.85)',
     border: 'rgba(37,190,186,0.18)',
-    items: ['Session prep', 'Progress tracking'],
+    items: ['Session prep', 'Progress tracking', 'Client health checks'],
   },
   {
     label: 'BUILD',
     accent: 'rgba(252,247,232,0.65)',
     border: 'rgba(252,247,232,0.10)',
-    items: ['Workshop scripts', 'Landing pages'],
+    items: ['Workshop scripts', 'Landing pages', 'Email campaigns'],
   },
 ]
 
@@ -158,7 +158,7 @@ export default function LoginPage() {
         <div className="animate-slide-left delay-2 relative z-10">
           <p className="text-[9px] tracking-[0.28em] uppercase mb-8 font-semibold"
             style={{ color: 'var(--ccc-tiffany)', fontFamily: 'var(--font-body)' }}>
-            Clevette Coombs Consulting
+            For coaches · consultants · solopreneurs
           </p>
 
           <h2 className="tracking-tight mb-10"
@@ -188,10 +188,10 @@ export default function LoginPage() {
               fontSize: 'clamp(3.8rem, 7vw, 5rem)', lineHeight: '0.90', letterSpacing: '-0.01em',
               color: 'var(--ccc-near-black)',
             }}>
-              Sign in.
+              Welcome back.
             </h1>
             <p className="text-sm mt-4" style={{ color: 'var(--muted-foreground)', fontFamily: 'var(--font-body)' }}>
-              Welcome back.
+              Your operating system is ready.
             </p>
           </div>
 
@@ -220,15 +220,20 @@ export default function LoginPage() {
             </button>
           </form>
 
-          <p className="text-sm mt-8 animate-fade-up delay-3" style={{ color: 'var(--muted-foreground)', fontFamily: 'var(--font-body)' }}>
-            No account?{' '}
-            <a href="/signup" className="font-semibold underline underline-offset-4" style={{ color: 'var(--ccc-raspberry)' }}>Sign up</a>
-          </p>
+          <div className="flex items-center justify-between mt-8 animate-fade-up delay-3">
+            <p className="text-sm" style={{ color: 'var(--muted-foreground)', fontFamily: 'var(--font-body)' }}>
+              No account?{' '}
+              <a href="/signup" className="font-semibold underline underline-offset-4" style={{ color: 'var(--ccc-raspberry)' }}>Sign up</a>
+            </p>
+            <a href="/forgot-password" className="text-sm underline underline-offset-4" style={{ color: 'var(--muted-foreground)', fontFamily: 'var(--font-body)', opacity: 0.60 }}>
+              Forgot password?
+            </a>
+          </div>
 
           <div className="mt-12 animate-fade-up delay-4">
             <div className="stat-rule mb-5" />
             <p className="text-[10px] tracking-[0.18em] uppercase" style={{ color: 'var(--muted-foreground)', opacity: 0.45, fontFamily: 'var(--font-body)' }}>
-              AI operating system for coaches and consultants
+              The OS for coaches, consultants &amp; solopreneurs
             </p>
           </div>
         </div>
