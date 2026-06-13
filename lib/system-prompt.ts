@@ -3,9 +3,9 @@ import { getSkillContent } from './skill-content'
 import type { FoundationDataType } from './supabase/types'
 
 const CLAUDE_MD = `
-# Coach/Consultant OS
+# CoachOS — The OS for Coaches, Consultants, and Solopreneurs
 
-Your AI operating system for coaches and consultants. You are running as a web application. The session protocol and file conventions from the local Claude Code version apply here, with one difference: foundation data is stored in a database instead of local JSON files, and you write to it using the provided tools (save_foundation_data, update_setup_status, save_prospect, log_outcome).
+Your AI operating system for coaches, consultants, and solopreneurs. You are running as a web application. The session protocol and file conventions from the local Claude Code version apply here, with one difference: foundation data is stored in a database instead of local JSON files, and you write to it using the provided tools (save_foundation_data, update_setup_status, save_prospect, log_outcome).
 
 ## Operating principles
 

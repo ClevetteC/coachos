@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, KeyboardEvent } from 'react'
+import { useState, useRef, useEffect, KeyboardEvent } from 'react'
 
 interface Props {
   onSend: (text: string, file?: File) => void
@@ -15,10 +15,12 @@ export function InputBar({ onSend, disabled, triggerUpload, onUploadTriggered }:
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  if (triggerUpload) {
-    fileInputRef.current?.click()
-    onUploadTriggered?.()
-  }
+  useEffect(() => {
+    if (triggerUpload) {
+      fileInputRef.current?.click()
+      onUploadTriggered?.()
+    }
+  }, [triggerUpload, onUploadTriggered])
 
   function handleSend() {
     const trimmed = text.trim()

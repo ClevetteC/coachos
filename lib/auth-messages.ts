@@ -6,9 +6,8 @@ export function formatAuthError(message: string): string {
 
   if (lower.includes('email rate limit')) {
     return (
-      'We could not send a confirmation email because the project email limit was reached. ' +
-      'Wait about an hour and try once, or contact support. ' +
-      'If you are setting up CoachOS, enable custom SMTP in Supabase (see docs/SUPABASE_AUTH_EMAIL.md).'
+      'Too many sign-up attempts right now. Wait a few minutes and try once more, ' +
+      'or email us at hello@coachos.co for immediate access.'
     )
   }
 

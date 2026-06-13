@@ -16,19 +16,19 @@ const STEPS: Step[] = [
   {
     counter: '01',
     title: 'Welcome to CoachOS',
-    body: 'Most coaches end up with a folder of AI prompts they ran once and forgot. CoachOS is different. It runs on your voice, your ideal client, and your offers. Every output, from LinkedIn sequences to full proposals, is checked for voice and conversion quality before it reaches you. Nothing to fix. Ready to send.',
+    body: 'Most coaches, consultants, and solopreneurs end up with a folder of AI prompts they ran once and forgot. CoachOS is different. It runs on your voice, your ideal client, and your offers. Every output — from LinkedIn sequences to full proposals — is checked for voice and conversion quality before it reaches you. Nothing to fix. Ready to send.',
     features: null,
   },
   {
     counter: '02',
     title: 'Your foundation',
-    body: 'CoachOS runs on four files you build once. Your voice profile, ideal client, offer stack, and credential bank. Every workflow reads from them so every output sounds like you and speaks to your clients.',
+    body: 'CoachOS runs on four files you build once. Your voice profile, ideal client, offer stack, and credential bank. Every workflow reads from them so every output sounds like you and speaks directly to your clients.',
     features: ['Voice profile', 'Ideal client avatar', 'Offer stack', 'Credential bank'],
   },
   {
     counter: '03',
     title: 'Seven workflow patterns',
-    body: 'Tell CoachOS what you want to accomplish. It chains the right skills together and runs the full workflow end to end.',
+    body: 'Tell CoachOS what you want to accomplish. It chains the right skills together and runs the full workflow end to end — no prompt engineering required.',
     features: [
       'Land a new client',
       'Launch an offer',
@@ -42,7 +42,7 @@ const STEPS: Step[] = [
   {
     counter: '04',
     title: 'Every output ships in your voice',
-    body: 'Prospect research, proposals, LinkedIn outreach, email campaigns, landing pages, and content. Two quality gates run on every output before it reaches you: voice-check and conversion-check.',
+    body: 'Prospect research, proposals, LinkedIn outreach, email campaigns, landing pages, and content — all output in your voice. Two quality gates run on every deliverable before it reaches you: voice-check and conversion-check.',
     features: [
       'Prospect research and SWOT',
       'Proposals and contracts',
@@ -55,7 +55,7 @@ const STEPS: Step[] = [
   {
     counter: '05',
     title: 'Two steps from your first output',
-    body: 'Set up your foundation and CoachOS can run any workflow. Takes about 15 minutes.',
+    body: 'Set up your foundation and CoachOS can run any workflow. Takes about 15 minutes. Upload your existing documents or answer five blocks of questions.',
     features: null,
     isFinal: true,
   },

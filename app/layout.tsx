@@ -22,18 +22,18 @@ const monoFont = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://coach-os-web-pink.vercel.app'),
-  title: "CoachOS",
-  description: "Your AI operating system for sales, coaching, and consulting. Build your foundation once. Run every workflow from here.",
+  title: "CoachOS — The OS for Coaches, Consultants & Solopreneurs",
+  description: "The AI operating system built for coaches, consultants, and solopreneurs. Build your foundation once — voice profile, ideal client, offer stack — and run every sales, content, and delivery workflow from there.",
   openGraph: {
-    title: "CoachOS",
-    description: "Your AI operating system for sales, coaching, and consulting.",
+    title: "CoachOS — The OS for Coaches, Consultants & Solopreneurs",
+    description: "Build your foundation once. Run every sales, content, and delivery workflow in your voice.",
     siteName: "CoachOS",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "CoachOS",
-    description: "Your AI operating system for sales, coaching, and consulting.",
+    title: "CoachOS — The OS for Coaches, Consultants & Solopreneurs",
+    description: "Build your foundation once. Run every sales, content, and delivery workflow in your voice.",
   },
 };
 
